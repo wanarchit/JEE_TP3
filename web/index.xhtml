@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Les étudiant</title>
+    </h:head>
+    <h:body>
+        <center><h1><font color = "blue"><u>Les étudiants</u></font></h1></center>
+        <h:form id="form">
+            <p:dataTable value="#{etuCtrl.etudiants}" selectionMode="single" selection="#{etuCtrl.selectedEtu}"
+                         var="e" rowKey="#{e.id}">
+            <p:ajax event="rowSelect" update="formUp:formUpdate"/>
+            <p:column headerText="Id">
+                <h:outputText value="#{e.id}" />
+            </p:column>
+            <p:column headerText="Prénom">
+                <B><h:outputText value="#{e.prenom}" /></B>
+            </p:column>
+            <p:column headerText="Nom">
+                <B><h:outputText value="#{e.nom}" /></B>
+            </p:column>
+            <p:column headerText="Age">
+                <h:outputText value="#{e.age}" />
+            </p:column>
+            <p:column headerText="Promotion">
+                <h:outputText value="#{e.promo.nom}" /> - <h:outputText value="#{e.promo.annee}" />
+            </p:column>
+            <f:facet name="footer">
+                <p:commandButton id="boutonSuppr" action="#{etuCtrl.removeEtu(etuCtrl.selectedEtu.id)}" 
+                                 icon="ui-icon-close" value="Supprimer" ajax="false"/>
+                <p:commandButton id="boutonUpdate" icon="ui-icon-pencil" value="Modifier" ajax="true" 
+                                         onclick="PF('formUpdate').show();"/>
+            </f:facet>
+        </p:dataTable>
+            </h:form>
+        <h:form id="formUp">
+            <p:dialog id="formUpdate" header="Mettre à jour un étudiant" modal="true" widgetVar="formUpdate" resizable="false">
+                <h:panelGrid columns="2" cellpadding="5">   
+                    <h:outputLabel value="Prénom" />
+                    <p:inputText value="#{etuCtrl.selectedEtu.prenom}"/>
+                    <h:outputLabel value="Nom" />
+                    <p:inputText value="#{etuCtrl.selectedEtu.nom}"/>
+                    <h:outputLabel value="Age" />
+                    <p:inputText value="#{etuCtrl.selectedEtu.age}"/>
+                    <f:facet name="footer">
+                        <p:commandButton icon="ui-icon-circle-check" action="#{etuCtrl.updateEtu(etuCtrl.selectedEtu)}" 
+                                         ajax="false"/>
+                    </f:facet>  
+                </h:panelGrid>
+           </p:dialog>
+        </h:form>
+        
+        <br/>
+        
+        <h:form>
+            <center>
+            <p><h1><u>Ajouter un étudiant</u> :</h1></p>
+            <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+            <p:outputLabel for="prenom" value="Prénom : "/> <p:inputText id="prenom" value = "#{etudiant.prenom}"/>
+            <p:outputLabel for="nom" value="Nom : "/><p:inputText id="nom" value = "#{etudiant.nom}"/>
+            <p:outputLabel for="age" value="Age : "/><p:inputText id="age" value = "#{etudiant.age}"/>
+            <p:outputLabel for="promo" value="Promotion : "/>
+            <p:selectOneMenu id="promo" value="#{etudiant.promo}">
+                <f:selectItems value="#{promotionController.promotions}" var="promo" itemValue="#{promo.id}" itemLabel="#{promo.nom}-#{promo.annee}" />
+            </p:selectOneMenu>
+            <center><p:commandButton ajax = "False" value="Ajouter" action = "#{etuCtrl.addEtu(etudiant)}" /></center>
+            </h:panelGrid>
+        </center>
+        </h:form> 
+        
+    </h:body>
+</html>
+
